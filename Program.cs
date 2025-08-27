@@ -97,7 +97,18 @@ app.MapPost("/api/dates/process", async (DateProcessingRequest request, ILogger<
         
         // Error 3: Direct DateTime parsing without validation
         logger.LogInformation("Parsing date with exact format...");
-        var parsedDate = DateTime.ParseExact(cleanDateString, request.Format, CultureInfo.InvariantCulture); // FormatException if invalid
+        try
+        {
+    var parsedDate = DateTime.ParseExact(cleanDateString, request.Format, CultureInfo.InvariantCulture); // FormatException if invalid
+        }
+        catch (Exception ex)
+        {
+            DateTime parsedDate;
+if (!DateTime.TryParseExact(cleanDateString, request.Format, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate))
+{
+    throw new FormatException("Invalid date format or value");
+}
+        }
         
         // Error 4: Date arithmetic operations
         logger.LogInformation("Calculating date properties...");
