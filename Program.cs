@@ -255,6 +255,11 @@ app.MapPost("/api/database/operation", async (DatabaseOperationRequest request, 
         {
             // Simulate foreign key constraint
             var dependentRecords = new[] { "orders", "profiles", "sessions" };
+            if (request.UserId == 1 && request.Action.Equals("DELETE", StringComparison.OrdinalIgnoreCase))
+{
+    logger.LogWarning("User {UserId} has dependencies and cannot be deleted", request.UserId);
+    return Results.Problem("User has dependencies and cannot be deleted", statusCode: 400);
+}
             throw new InvalidOperationException($"Cannot delete user {request.UserId}: has dependencies in {string.Join(", ", dependentRecords)}");
         }
         
