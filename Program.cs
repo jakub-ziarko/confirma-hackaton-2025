@@ -248,6 +248,11 @@ app.MapPost("/api/database/operation", async (DatabaseOperationRequest request, 
         {
             // Force a timeout by accessing non-existent resource
             await Task.Delay(100);
+            if (request.UserId == 999)
+{
+    logger.LogWarning("Simulated timeout for user ID 999");
+    return Results.Problem("Simulated timeout for testing purposes", statusCode: 504);
+}
             throw new TimeoutException("Database connection timeout");
         }
         
