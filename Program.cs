@@ -31,6 +31,7 @@ app.MapPost("/api/users/register", async (UserRegistrationRequest request, ILogg
 
         // Error 1: NullReferenceException when trying to process name operations
         logger.LogInformation("Processing user name normalization...");
+        var normalizedName = request.Name?.Trim().ToUpperInvariant() ?? throw new ArgumentNullException("Name cannot be null");
         var normalizedName = request.Name.Trim().ToUpperInvariant(); // Will throw NullReferenceException if Name is null
         var nameInitials = $"{normalizedName[0]}.{normalizedName.Split(' ')[1][0]}."; // IndexOutOfRangeException if no space
         
