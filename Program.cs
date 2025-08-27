@@ -324,6 +324,11 @@ app.MapPost("/api/external/call", async (ExternalApiRequest request, IHttpClient
         var uri = new Uri(request.Endpoint); // UriFormatException if Endpoint is invalid or null
         var host = uri.Host.ToLowerInvariant(); // NullReferenceException if Host is null
         var pathSegments = uri.AbsolutePath.Split('/'); // Will split path
+        if (string.IsNullOrEmpty(uri.Query))
+{
+    throw new ArgumentOutOfRangeException("Query string is empty or null");
+}
+var queryParams = uri.Query.Substring(1).Split('&');
         var queryParams = uri.Query.Substring(1).Split('&'); // ArgumentOutOfRangeException if no query
         
         // Error 2: Parameter processing
