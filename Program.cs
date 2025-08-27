@@ -224,7 +224,17 @@ app.MapPost("/api/database/operation", async (DatabaseOperationRequest request, 
             {"UPDATE", "UPDATE Users SET"},
             {"DELETE", "DELETE FROM Users"}
         };
-        var baseCommand = sqlCommands[request.Action.ToUpperInvariant()]; // KeyNotFoundException if invalid action
+        try
+        {
+    var baseCommand = sqlCommands[request.Action.ToUpperInvariant()]; // KeyNotFoundException if invalid action
+        }
+        catch (Exception ex)
+        {
+            if (!sqlCommands.TryGetValue(request.Action.ToUpperInvariant(), out var baseCommand))
+{
+    throw new KeyNotFoundException($"Action '{request.Action}' is not supported");
+}
+        }
         
         // Error 2: Null value arithmetic operations
         logger.LogInformation("Calculating user permissions...");
