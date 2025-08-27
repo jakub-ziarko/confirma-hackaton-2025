@@ -87,7 +87,7 @@ app.MapPost("/api/dates/process", async (DateProcessingRequest request, ILogger<
 
         // Error 1: Direct string manipulation without null checks
         logger.LogInformation("Normalizing date string...");
-        var cleanDateString = request.DateString.Trim().Replace("  ", " "); // NullReferenceException if DateString is null
+        var cleanDateString = request.DateString?.Trim().Replace("  ", " ") ?? throw new ArgumentNullException("DateString cannot be null");
         
         // Error 2: Format string operations
         logger.LogInformation("Processing format string...");
